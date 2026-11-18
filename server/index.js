@@ -19,8 +19,8 @@ app.use(function (req, res, next) {
 
 app.use('/data-processor-json', bodyParser.json({ limit: '50mb' }))
 app.post('/data-processor-json', async (req, res) => {
-  if (!req.body.data) {
-    res.sendStatus(401)
+  if (!req.body || !Array.isArray(req.body.data) || req.body.data.length === 0) {
+    return res.sendStatus(400)
   }
 
   const startTime = Date.now()
@@ -82,8 +82,11 @@ app.post('/data-processor-buffer', async (req, res) => {
 
 app.use('/data-processor-threads', bodyParser.json({ limit: '50mb' }))
 app.post('/data-processor-threads', async (req, res) => {
-  if (!req.body.data) {
-    res.sendStatus(401)
+  if (!req.body || !Array.isArray(req.body.data) || req.body.data.length === 0) {
+    return res.sendStatus(400)
+  }
+  if (!Number.isInteger(req.body.numThreads) || req.body.numThreads < 1 || req.body.numThreads > 8) {
+    return res.status(400).send({ error: 'numThreads must be an integer between 1 and 8' })
   }
 
   const startTime = Date.now()

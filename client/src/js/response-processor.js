@@ -10,7 +10,7 @@ export default (containerId, data) => {
 
   rows.forEach(item => {
     const el = document.createElement('h5')
-    el.innerHTML = item
+    el.textContent = item
 
     container.appendChild(el)
   })

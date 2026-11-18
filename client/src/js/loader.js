@@ -3,7 +3,7 @@ export const addLoader = (containerId, message = 'Processing...') => {
 
   const loader = document.createElement('h4')
   loader.setAttribute('class', 'loader')
-  loader.innerHTML = message
+  loader.textContent = message
 
   container.appendChild(loader)
 }
