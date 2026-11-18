@@ -1,4 +1,3 @@
-import uuidv1 from 'uuid/v1'
 import words from 'random-words'
 
 export default (numRecords = 2000) => {
@@ -6,7 +5,7 @@ export default (numRecords = 2000) => {
 
   for (let i = 0; i < numRecords; i++) {
     result.push({
-      id: uuidv1(),
+      id: crypto.randomUUID(),
       sentence: words({ min: 8, max: 20 }).join(' ')
     })
   }

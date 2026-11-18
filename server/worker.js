@@ -1,8 +1,6 @@
-const { parentPort, workerData } = require('worker_threads')
-const dataProcessor = require('./data-processor')
+const { parentPort, workerData } = require('node:worker_threads')
+const processRecords = require('./data-processor')
 
-module.exports = (async () => {
-  const numProcessed = await dataProcessor(workerData.data)
-
-  parentPort.postMessage({ done: true, numProcessed })
-})()
+processRecords(workerData.data)
+  .then(numProcessed => parentPort.postMessage({ done: true, numProcessed }))
+  .catch(() => parentPort.postMessage({ done: false }))
