@@ -1,4 +1,3 @@
-import axios from 'axios'
 import dataGenerator from './data-generator'
 import responseProcessor from './response-processor'
 import { addLoader, removeLoader } from './loader'
@@ -9,19 +8,21 @@ const getNumRecords = () => {
 }
 
 const processData = async (elId, data, type) => {
-  const SERVER_URL = 'http://localhost:8094'
+  const SERVER_URL = 'http://127.0.0.1:8094'
 
   addLoader(elId)
 
-  const { data: responseData } = await axios({
-    method: 'post',
-    url: `${SERVER_URL}/data-processor-${type}`,
-    data
-  })
-
-  removeLoader(elId)
-
-  return responseData
+  try {
+    const response = await fetch(`${SERVER_URL}/data-processor-${type}`, {
+      method: 'POST',
+      headers: { 'Content-Type': type === 'buffer' ? 'application/octet-stream' : 'application/json' },
+      body: type === 'buffer' ? data : JSON.stringify(data)
+    })
+    if (!response.ok) throw new Error(`Processing failed (${response.status})`)
+    return await response.json()
+  } finally {
+    removeLoader(elId)
+  }
 }
 
 window.addEventListener('load', () => {

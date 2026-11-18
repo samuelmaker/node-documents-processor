@@ -1,5 +1,4 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 const server = require('./server')
 
 const app = express()
@@ -15,7 +14,7 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.use(bodyParser.json({ limit: '50mb' }))
+app.use(express.json({ limit: '50mb' }))
 
 app.post('/mock-parser', (req, res) => {
   res.sendStatus(200)

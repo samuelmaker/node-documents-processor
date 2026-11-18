@@ -1,22 +1,10 @@
-const axios = require('axios')
-
-const EXTERNAL_SERVER_URL = 'http://localhost:8095'
+const externalServer = process.env.PARSER_URL || 'http://127.0.0.1:8095/mock-parser'
 
 module.exports = async data => {
-  let numProcessed = 0
-
-  for (let i = 0; i < data.length; i++) {
-    try {
-      await axios({
-        method: 'post',
-        url: `${EXTERNAL_SERVER_URL}/mock-parser`
-      })
-      numProcessed++
-      // console.log({ numProcessed })
-    } catch (err) {
-      console.error({ err })
-    }
+  for (const record of data) {
+    const response = await fetch(externalServer, { method: 'POST', signal: AbortSignal.timeout(10000) })
+    if (!response.ok) throw new Error('External parser failed')
+    await response.arrayBuffer()
   }
-
-  return numProcessed
+  return data.length
 }

@@ -5,7 +5,7 @@ const port = 8095
 module.exports = app => {
   const server = http.createServer(app)
 
-  server.listen(port, (err) => {
+  server.listen(port, process.env.HOST || '127.0.0.1', (err) => {
     if (err) {
       return console.log('something bad happened', err)
     }
